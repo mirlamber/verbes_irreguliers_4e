@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application de Verbes Irréguliers</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .ceinture {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        #jaune { background-color: yellow; color: black; }
+        #orange { background-color: orange; }
+        #verte { background-color: green; }
+        #bleue { background-color: blue; }
+        #marron { background-color: brown; }
+        #noire { background-color: black; }
+
+        .active {
+            box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .tableau-zones {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .zone {
+            width: 14%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="score" style="margin-top:15px; font-size:18px; font-weight:bold;"></div>
+
+    <div class="container">
+        <button id="jaune" class="ceinture" data-ceinture="jaune">Ceinture Jaune</button>
+        <button id="orange" class="ceinture" data-ceinture="orange">Ceinture Orange</button>
+        <button id="verte" class="ceinture" data-ceinture="verte">Ceinture Verte</button>
+        <button id="bleue" class="ceinture" data-ceinture="bleue">Ceinture Bleue</button>
+        <button id="marron" class="ceinture" data-ceinture="marron">Ceinture Marron</button>
+        <button id="noire" class="ceinture" data-ceinture="noire">Ceinture Noire</button>        
+    </div>
+
+    <div class="actions">
+        <button id="lancer-test">Lancer le test</button>
+        <button id="correction">Correction</button>
+    </div>
+    
+    <div class="tableau-zones">
+        <!-- Chaque ligne contient quatre champs d'entrée -->
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+        <div class="row">
+            <input type="text" class="zone" placeholder="Verbe infinitif">
+            <input type="text" class="zone" placeholder="Prétérit">
+            <input type="text" class="zone" placeholder="Participe passé">
+            <input type="text" class="zone" placeholder="Traduction">
+        </div>
+    </div>
+    
+    <div id="debug" style="text-align:left; margin-top:20px; background:#f0f0f0; padding:10px;"></div>
+
+    <script>
+        const G1 = [
+            ["cost", "cost", "cost", "coûter"],
+            ["put", "put", "put", "mettre"],
+            ["read", "read", "read", "lire"],
+            ["set", "set", "set", "placer - fixer"],
+            ["shut", "shut", "shut", "fermer"],
+            ["begin", "began", "begun", "commencer"],
+            ["drink", "drank", "drunk", "boire"],
+            ["swim", "swam", "swum", "nager"],
+            ["sing", "sang", "sung", "chanter"],
+            ["become", "became", "become", "devenir"],
+            ["come", "came", "come", "venir"],
+            ["run", "ran", "run", "courir"],
+            ["feel", "felt", "felt", "(res)sentir"],
+            ["keep", "kept", "kept", "garder"],
+            ["sleep", "slept", "slept", "dormir"],
+            ["meet", "met", "met", "rencontrer"]
+        ];
+
+        const G2 = [
+            ["be", "was / were", "been", "être"],
+            ["see", "saw", "seen", "voir"],
+            ["do", "did", "done", "faire"],
+            ["go", "went", "gone", "aller"],
+            ["have", "had", "had", "avoir"],
+            ["hear", "heard", "heard", "entendre"],
+            ["stand", "stood", "stood", "se tenir debout"],
+            ["understand", "understood", "understood", "comprendre"],
+            ["fly", "flew", "flown", "voler"],
+            ["know", "knew", "known", "connaître, savoir"],
+            ["show", "showed", "shown", "montrer"]
+        ];
+
+        const G3 = [
+            ["catch", "caught", "caught", "attraper"],
+            ["teach", "taught", "taught", "enseigner"],
+            ["buy", "bought", "bought", "acheter"],
+            ["fight", "fought", "fought", "combattre"],
+            ["think", "thought", "thought", "penser"]
+        ];
+
+
+
+        const G4 = [
+            ["build", "built", "built", "construire"],
+            ["burn", "burnt", "burnt", "brûler"],
+            ["learn", "learnt", "learnt", "apprendre"],
+            ["leave", "left", "left", "partir, quitter"],
+            ["lose", "lost", "lost", "perdre"],
+            ["mean", "meant", "meant", "vouloir dire"],
+            ["spell", "spelt", "spelt", "épeler"],
+            ["send", "sent", "sent", "envoyer"],
+            ["spend", "spent", "spent", "dépenser"],
+            ["make", "made", "made", "fabriquer"],
+            ["pay", "paid", "paid", "payer"],
+            ["say", "said", "said", "dire"]
+        ];
+
+        const G5 = [
+            ["find", "found", "found", "trouver"],
+            ["get", "got", "got", "obtenir"],
+            ["sit", "sat", "sat", "s'asseoir"],
+            ["hold", "held", "held", "tenir"],
+            ["tell", "told", "told", "dire, raconter"],
+            ["forget", "forgot", "forgotten", "oublier"],
+            ["break", "broke", "broken", "casser"],
+            ["choose", "chose", "chosen", "choisir"],
+            ["steal", "stole", "stolen", "voler / dérober"],
+            ["wake", "woke", "woken", "réveiller"],
+            ["drive", "drove", "driven", "conduire"],
+            ["write", "wrote", "written", "écrire"],
+            ["forbid", "forbade", "forbidden", "interdire"],
+            ["give", "gave", "given", "donner"],
+            ["forgive", "forgave", "forgiven", "pardonner"],
+            ["hide", "hid", "hidden", "cacher"],
+            ["shake", "shook", "shaken", "secouer"],
+            ["take", "took", "taken", "prendre"]
+        ];
+        
+        const ceintureJaune = [...G1];
+
+        const ceintureOrange = [
+            ...G1,
+            ...G2,
+        ];
+
+        const ceintureVerte = [
+            ...G1,
+            ...G2,
+            ...G3,
+        ];
+
+        const ceintureBleue = [...G4];
+
+        const ceintureMarron = [...G5];
+
+        const ceintureNoire = [
+            ...G1,
+            ...G2,
+            ...G3,
+            ...G4,
+            ...G5
+        ];
+
+        let listeVerbes = [];
+        let selectedVerbs = []; // Tableau pour stocker les verbes sélectionnés
+
+        //activation désactivation du bouton correction
+        document.getElementById("correction").disabled = true;
+
+        // Remplir la liste de verbes basée sur la ceinture sélectionnée
+        document.querySelectorAll('.ceinture').forEach(button => {
+            button.addEventListener('click', function () {
+                // Supprimer l'effet "active" de tous les boutons
+                document.querySelectorAll('.ceinture').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const ceinture = this.getAttribute('data-ceinture');
+
+                // Choisir la liste appropriée selon la ceinture
+                switch (ceinture) {
+                    case 'jaune':
+                        listeVerbes = ceintureJaune;
+                        break;
+                    case 'orange':
+                        listeVerbes = ceintureOrange;
+                        break;
+                    case 'verte':
+                        listeVerbes = ceintureVerte;
+                        break;
+                    case 'bleue':
+                        listeVerbes = ceintureBleue;
+                        break;
+                    case 'marron':
+                        listeVerbes = ceintureMarron;
+                        break;
+                    case 'noire':
+                        listeVerbes = ceintureNoire;
+                        break;
+                }
+                document.getElementById("lancer-test").disabled = false; // Activer le bouton de lancement du test
+            });
+        });
+
+        function debugInfo(msg) {
+            const debugDiv = document.getElementById('debug');
+            const p = document.createElement('p');
+            p.textContent = msg;
+            debugDiv.appendChild(p);
+}
+
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function remplirCases() {
+            const rows = document.querySelectorAll('.row');
+            selectedVerbs = [];
+
+                // 🔹 DEBUG : afficher les infos avant de remplir les cases
+            //debugInfo(`G1: ${G1.length} verbes`);
+            //debugInfo(`G2: ${G2.length} verbes`);
+            //debugInfo(`G3: ${G3.length} verbes`);
+            //debugInfo(`G4: ${G4.length} verbes`);
+            //debugInfo(`G5: ${G5.length} verbes`);
+
+            //debugInfo(`Ceinture Jaune: ${ceintureJaune.length}`);
+            //debugInfo(`Ceinture Orange: ${ceintureOrange.length}`);
+            //debugInfo(`Ceinture Verte: ${ceintureVerte.length}`);
+            //debugInfo(`Ceinture Bleue: ${ceintureBleue.length}`);
+            //debugInfo(`Ceinture Marron: ${ceintureMarron.length}`);
+            //debugInfo(`Ceinture Noire: ${ceintureNoire.length}`);
+
+            //debugInfo(`Liste verbes sélectionnée: ${listeVerbes.length}`);
+            //debugInfo(`Nombre de lignes: ${rows.length}`);
+
+            // 🔴 Réinitialisation complète
+            rows.forEach(row => {
+                row.querySelectorAll('.zone').forEach(input => {
+                    input.readOnly = false;
+                    input.value = '';
+                    input.style.backgroundColor = '';
+                    input.style.color = 'black';
+                    input.style.fontWeight = 'normal';
+                });
+            });
+
+            if (listeVerbes.length < rows.length) {
+                alert("Pas assez de verbes pour remplir l'évaluation.");
+                return;
+            }
+
+            // Mélanger la liste des verbes
+            const shuffledVerbs = shuffle([...listeVerbes]);
+
+            // Remplir les lignes avec les 10 premiers verbes mélangés
+            rows.forEach((row, index) => {
+                const verb = shuffledVerbs[index];
+                selectedVerbs.push(verb);
+
+                const inputs = row.querySelectorAll('.zone');
+                const caseToFillIndex = Math.floor(Math.random() * 4);
+                const caseToFill = inputs[caseToFillIndex];
+
+                caseToFill.value = verb[caseToFillIndex];
+                caseToFill.readOnly = true;
+                caseToFill.style.backgroundColor = "#e0e0e0";
+                caseToFill.style.fontWeight = "bold";
+
+                    // 🔹 DEBUG : afficher le verbe et la case choisie
+                //debugInfo(`Verbe choisi pour la ligne ${index+1}: ${verb.join(", ")}`);
+                //debugInfo(`Case remplie: ${caseToFillIndex}`);
+            });
+        }
+
+
+
+
+
+
+
+
+
+        // Gérer le lancement du test
+        
+        document.getElementById('lancer-test').addEventListener('click', function () {
+            if (listeVerbes.length === 0) {
+                alert("Choisis d'abord une ceinture.");
+                // rien de plus à faire, le bouton reste actif
+                return;
+            }
+
+            // Si une ceinture est choisie, on lance le test
+            remplirCases();
+
+            // Désactiver le bouton lancer-test
+            this.disabled = true;
+
+            // Activer le bouton correction
+            document.getElementById("correction").disabled = false;
+
+            // Désactiver les boutons de ceinture
+            document.querySelectorAll('.ceinture').forEach(btn => {
+                btn.disabled = true;
+                btn.classList.remove('active');
+            });
+        });
+
+
+
+        // Gérer la correction
+        document.getElementById('correction').addEventListener('click', function () {
+            const rows = document.querySelectorAll('.row');
+            score = 0;
+
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('.zone');
+                const correctVerb = selectedVerbs[index];
+
+                let ligneJuste = true;
+
+                inputs.forEach((input, i) => {
+                    if (input.readOnly) return; // ignore la case indice
+
+                    const reponseEleve = input.value.trim().toLowerCase(); // 🔹 tout en minuscules
+                    let reponseCorrecte;
+
+                    if (i === 3) {
+                        // Traductions multiples possibles
+                        reponseCorrecte = correctVerb[3]
+                            .toLowerCase()
+                            .split(/[(),\-]/)
+                            .map(r => r.trim())
+                            .filter(r => r !== "");
+
+                        if (reponseCorrecte.includes(reponseEleve)) {
+                            input.style.backgroundColor = "lightgreen";
+                        } else {
+                            input.style.backgroundColor = "lightcoral";
+                            input.value += ` (${correctVerb[3]})`;
+                            input.style.color = "red";
+                            ligneJuste = false;
+                        }
+
+                    } else {
+                        // Colonnes anglaises
+                        reponseCorrecte = correctVerb[i].toLowerCase();
+
+                        if (reponseEleve === reponseCorrecte) {
+                            input.style.backgroundColor = "lightgreen";
+                        } else {
+                            input.style.backgroundColor = "lightcoral";
+                            input.value += ` (${correctVerb[i]})`;
+                            input.style.color = "red";
+                            ligneJuste = false;
+                        }
+                    }
+                });
+
+                if (ligneJuste) score++;
+            });
+
+            // Afficher le score sur la page
+            const scoreDiv = document.getElementById("score");
+            scoreDiv.textContent = "Score : " + score + " / 10";
+
+            // Couleur selon le score
+            if (score >= 8) scoreDiv.style.color = "green";
+            else if (score >= 5) scoreDiv.style.color = "orange";
+            else scoreDiv.style.color = "red";
+
+            // Bloquer le bouton correction après usage
+            document.getElementById("correction").disabled = true;
+
+            document.querySelectorAll('.zone').forEach(input => {
+                input.readOnly = true;
+
+                if (input.style.backgroundColor === "") {
+                    input.style.backgroundColor = "#f0f0f0";
+                }
+            });
+
+        });
+
+
+        
+
+    </script>
+</body>
+</html>
