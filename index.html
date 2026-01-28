@@ -395,7 +395,15 @@
             });
         });
 
-
+        function normalize(str) {
+            return str
+                .toLowerCase()
+                .normalize("NFD")                 // enlève les accents
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[-/]/g, " ")            // tirets / slash → espace
+                .replace(/\s+/g, " ")             // espaces multiples
+                .trim();
+        }
 
         // Gérer la correction
         document.getElementById('correction').addEventListener('click', function () {
@@ -415,21 +423,24 @@
                     let reponseCorrecte;
 
                     if (i === 3) {
-                        // Traductions multiples possibles
-                        reponseCorrecte = correctVerb[3]
-                            .toLowerCase()
-                            .split(/[(),\-]/)
-                            .map(r => r.trim())
-                            .filter(r => r !== "");
+                    const repEleve = normalize(reponseEleve);
+                    const attendu = normalize(correctVerb[3]);
 
-                        if (reponseCorrecte.includes(reponseEleve)) {
-                            input.style.backgroundColor = "lightgreen";
-                        } else {
-                            input.style.backgroundColor = "lightcoral";
-                            input.value += ` (${correctVerb[3]})`;
-                            input.style.color = "red";
-                            ligneJuste = false;
-                        }
+                    const motsEleve = repEleve.split(" ");
+                    const motsAttendus = attendu.split(" ");
+
+                    const correct = motsAttendus.some(mot =>
+                        motsEleve.includes(mot)
+                    );
+
+                    if (correct) {
+                        input.style.backgroundColor = "lightgreen";
+                    } else {
+                        input.style.backgroundColor = "lightcoral";
+                        input.value += ` (${correctVerb[3]})`;
+                        input.style.color = "red";
+                        ligneJuste = false;
+                    }
 
                     } else {
                         // Colonnes anglaises
